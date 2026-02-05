@@ -89,7 +89,7 @@
 </head>
 <body>
 
-  <!-- Cute image (change if you want something starry/night-themed for the song) -->
+  <!-- Cute image (feel free to change) -->
   <img src="https://thumbs.dreamstime.com/b/charming-illustration-purple-teddy-bear-enjoying-roses-sweet-romantic-design-greeting-cards-invitations-valentine-335395800.jpg" 
        alt="Cute purple teddy with roses" class="cute">
 
@@ -102,62 +102,37 @@
 
   <p id="msg"></p>
 
-  <button id="musicToggle">Play The Night We Met by Lord Huron 🎵</button>
-
-  <!-- Hidden YouTube player -->
-  <div id="youtubePlayer"></div>
+  <button id="musicToggle">Play The Night We Met 🎵</button>
 
   <canvas id="confetti"></canvas>
+
+  <!-- Your uploaded audio file -->
+  <audio id="bgMusic" loop preload="auto">
+    <source src="Lord Huron - The Night We Met (Instrumental).mp3" type="audio/mpeg">
+    Your browser does not support audio.
+  </audio>
 
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
   <script>
     const yesBtn = document.getElementById('yesBtn');
     const noBtn = document.getElementById('noBtn');
     const msg = document.getElementById('msg');
+    const music = document.getElementById('bgMusic');
     const toggleBtn = document.getElementById('musicToggle');
 
-    let player;
     let isPlaying = false;
-
     toggleBtn.onclick = () => {
       if (isPlaying) {
-        player.pauseVideo();
-        toggleBtn.textContent = 'Play The Night We Met by Lord Huron 🎵';
+        music.pause();
+        toggleBtn.textContent = 'Play The Night We Met 🎵';
       } else {
-        if (!player) {
-          const tag = document.createElement('script');
-          tag.src = "https://www.youtube.com/iframe_api";
-          const firstScript = document.getElementsByTagName('script')[0];
-          firstScript.parentNode.insertBefore(tag, firstScript);
-
-          window.onYouTubeIframeAPILoaded = function() {
-            player = new YT.Player('youtubePlayer', {
-              height: '0',
-              width: '0',
-              videoId: 'KtlgYxa6MBE',  // Official "The Night We Met" audio
-              playerVars: {
-                autoplay: 1,
-                loop: 1,
-                playlist: 'KtlgYxa6MBE',
-                controls: 0,
-                modestbranding: 1,
-                fs: 0,
-                iv_load_policy: 3
-              },
-              events: {
-                onReady: (e) => e.target.playVideo()
-              }
-            });
-          };
-        } else {
-          player.playVideo();
-        }
+        music.play();
         toggleBtn.textContent = 'Pause Music 🔇';
       }
       isPlaying = !isPlaying;
     };
 
-    // Confetti flood on Yes
+    // Confetti flood on Yes (10 seconds)
     function floodConfetti() {
       const duration = 10 * 1000;
       const animationEnd = Date.now() + duration;
@@ -177,7 +152,7 @@
       }, 250);
     }
 
-    // Handle choice + email
+    // Handle choice + email notification
     function handleChoice(choice) {
       yesBtn.disabled = true;
       noBtn.disabled = true;
