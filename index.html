@@ -89,7 +89,7 @@
 </head>
 <body>
 
-  <!-- Replace src with your favorite image URL from above or your uploaded file -->
+  <!-- Your cute image (feel free to change) -->
   <img src="https://thumbs.dreamstime.com/b/charming-illustration-purple-teddy-bear-enjoying-roses-sweet-romantic-design-greeting-cards-invitations-valentine-335395800.jpg" 
        alt="Cute purple teddy with roses" class="cute">
 
@@ -102,38 +102,69 @@
 
   <p id="msg"></p>
 
-  <button id="musicToggle">Play Music 🎵</button>
+  <button id="musicToggle">Play Perfect by Ed Sheeran 🎵</button>
+
+  <!-- Hidden YouTube player container -->
+  <div id="youtubePlayer"></div>
 
   <canvas id="confetti"></canvas>
-
-  <audio id="bgMusic" loop>
-    <source src="https://cdn.pixabay.com/audio/2023/08/07/audio_8d9b8d5d8e.mp3" type="audio/mpeg">
-  </audio>
 
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
   <script>
     const yesBtn = document.getElementById('yesBtn');
     const noBtn = document.getElementById('noBtn');
     const msg = document.getElementById('msg');
-    const music = document.getElementById('bgMusic');
     const toggleBtn = document.getElementById('musicToggle');
 
-    // Music toggle
+    let player;
     let isPlaying = false;
+
+    // Load YouTube API and create player on first play
     toggleBtn.onclick = () => {
       if (isPlaying) {
-        music.pause();
-        toggleBtn.textContent = 'Play Music 🎵';
+        player.pauseVideo();
+        toggleBtn.textContent = 'Play Perfect by Ed Sheeran 🎵';
       } else {
-        music.play().catch(() => {});
+        if (!player) {
+          // Load API
+          const tag = document.createElement('script');
+          tag.src = "https://www.youtube.com/iframe_api";
+          const firstScript = document.getElementsByTagName('script')[0];
+          firstScript.parentNode.insertBefore(tag, firstScript);
+
+          window.onYouTubeIframeAPILoaded = function() {
+            player = new YT.Player('youtubePlayer', {
+              height: '0',
+              width: '0',
+              videoId: 'wGF7PswOENQ',  // Perfect by Ed Sheeran
+              playerVars: {
+                autoplay: 1,
+                loop: 1,
+                playlist: 'wGF7PswOENQ',  // Required for loop
+                controls: 0,
+                showinfo: 0,
+                modestbranding: 1,
+                fs: 0,
+                cc_load_policy: 0,
+                iv_load_policy: 3,
+                autohide: 0
+              },
+              events: {
+                onReady: (e) => e.target.playVideo()
+              }
+            });
+          };
+        } else {
+          player.playVideo();
+        }
         toggleBtn.textContent = 'Pause Music 🔇';
       }
       isPlaying = !isPlaying;
     };
 
-    // Continuous confetti flood function
+    // Confetti flood (10 seconds)
     function floodConfetti() {
-      const duration = 10 * 1000; // 10 seconds
+      const duration = 10 * 1000;
       const animationEnd = Date.now() + duration;
       const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0, colors: ['#ff9a9e', '#fecfef', '#a18cd1', '#e91e63', '#6a1b9a'] };
 
@@ -143,34 +174,28 @@
 
       const interval = setInterval(function() {
         const timeLeft = animationEnd - Date.now();
+        if (timeLeft <= 0) return clearInterval(interval);
 
-        if (timeLeft <= 0) {
-          return clearInterval(interval);
-        }
-
-        const particleCount = 70 * (timeLeft / duration);
+        const particleCount = 40 * (timeLeft / duration);
         confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
         confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
       }, 250);
     }
 
-    // Handle clicks
+    // Handle Yes/No + email
     function handleChoice(choice) {
-      // Disable buttons
       yesBtn.disabled = true;
       noBtn.disabled = true;
 
-      // Show message
       if (choice === 'yes') {
-        msg.innerHTML = "You made my day 💖✨";
+        msg.innerHTML = "You made my day 💖";
         msg.style.color = "#e91e63";
-        floodConfetti(); // Flood the page!
+        floodConfetti();
       } else {
         msg.innerHTML = "Okay";
         msg.style.color = "#7e57c2";
       }
 
-      // Send email notification
       const responseText = choice === 'yes' ? 'Yes 💖' : 'No';
       fetch("https://formsubmit.co/ajax/ericnanteer44@gmail.com", {
         method: "POST",
@@ -182,10 +207,7 @@
           subject: `Valentine Response from Naa: ${responseText}`,
           message: `Naa clicked ${responseText} on your Valentine page! Time: ${new Date().toLocaleString()}`
         })
-      })
-      .then(response => response.json())
-      .then(data => console.log('Email sent:', data))
-      .catch(error => console.log('Email error:', error));
+      });
     }
 
     yesBtn.onclick = () => handleChoice('yes');
