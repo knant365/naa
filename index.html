@@ -89,7 +89,7 @@
 </head>
 <body>
 
-  <!-- Your cute image (feel free to change) -->
+  <!-- Cute image (change if you want something starry/night-themed for the song) -->
   <img src="https://thumbs.dreamstime.com/b/charming-illustration-purple-teddy-bear-enjoying-roses-sweet-romantic-design-greeting-cards-invitations-valentine-335395800.jpg" 
        alt="Cute purple teddy with roses" class="cute">
 
@@ -102,9 +102,9 @@
 
   <p id="msg"></p>
 
-  <button id="musicToggle">Play Perfect by Ed Sheeran 🎵</button>
+  <button id="musicToggle">Play The Night We Met by Lord Huron 🎵</button>
 
-  <!-- Hidden YouTube player container -->
+  <!-- Hidden YouTube player -->
   <div id="youtubePlayer"></div>
 
   <canvas id="confetti"></canvas>
@@ -119,14 +119,12 @@
     let player;
     let isPlaying = false;
 
-    // Load YouTube API and create player on first play
     toggleBtn.onclick = () => {
       if (isPlaying) {
         player.pauseVideo();
-        toggleBtn.textContent = 'Play Perfect by Ed Sheeran 🎵';
+        toggleBtn.textContent = 'Play The Night We Met by Lord Huron 🎵';
       } else {
         if (!player) {
-          // Load API
           const tag = document.createElement('script');
           tag.src = "https://www.youtube.com/iframe_api";
           const firstScript = document.getElementsByTagName('script')[0];
@@ -136,18 +134,15 @@
             player = new YT.Player('youtubePlayer', {
               height: '0',
               width: '0',
-              videoId: 'wGF7PswOENQ',  // Perfect by Ed Sheeran
+              videoId: 'KtlgYxa6MBE',  // Official "The Night We Met" audio
               playerVars: {
                 autoplay: 1,
                 loop: 1,
-                playlist: 'wGF7PswOENQ',  // Required for loop
+                playlist: 'KtlgYxa6MBE',
                 controls: 0,
-                showinfo: 0,
                 modestbranding: 1,
                 fs: 0,
-                cc_load_policy: 0,
-                iv_load_policy: 3,
-                autohide: 0
+                iv_load_policy: 3
               },
               events: {
                 onReady: (e) => e.target.playVideo()
@@ -162,7 +157,7 @@
       isPlaying = !isPlaying;
     };
 
-    // Confetti flood (10 seconds)
+    // Confetti flood on Yes
     function floodConfetti() {
       const duration = 10 * 1000;
       const animationEnd = Date.now() + duration;
@@ -182,7 +177,7 @@
       }, 250);
     }
 
-    // Handle Yes/No + email
+    // Handle choice + email
     function handleChoice(choice) {
       yesBtn.disabled = true;
       noBtn.disabled = true;
