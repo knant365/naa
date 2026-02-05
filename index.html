@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title> Baby Naa 💖</title>
+  <title>Baby Naa 💖</title>
   <style>
     body {
       margin: 0;
@@ -34,11 +34,12 @@
     }
     .buttons {
       margin: 30px 0;
+      display: flex;
+      gap: 20px;
     }
     button {
       padding: 18px 60px;
       font-size: 1.6em;
-      margin: 15px;
       border: none;
       border-radius: 50px;
       cursor: pointer;
@@ -85,11 +86,34 @@
       pointer-events: none;
       z-index: 10;
     }
+
+    /* Mobile adjustments */
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 2.4em;
+      }
+      img.cute {
+        max-width: 260px;
+      }
+      .buttons {
+        flex-direction: column;
+        gap: 20px;
+      }
+      button {
+        padding: 16px 40px;
+        font-size: 1.4em;
+        width: 80%;
+        margin: 0 auto;
+      }
+      #msg {
+        font-size: 2em;
+        margin: 30px 0;
+      }
+    }
   </style>
 </head>
 <body>
 
-  <!-- Cute image (change if you want) -->
   <img src="https://thumbs.dreamstime.com/b/charming-illustration-purple-teddy-bear-enjoying-roses-sweet-romantic-design-greeting-cards-invitations-valentine-335395800.jpg" 
        alt="Cute purple teddy with roses" class="cute">
 
@@ -106,7 +130,6 @@
 
   <canvas id="confetti"></canvas>
 
-  <!-- Your uploaded audio file -->
   <audio id="bgMusic" loop preload="auto">
     <source src="night.mp3" type="audio/mpeg">
     Your browser does not support audio.
@@ -132,7 +155,6 @@
       isPlaying = !isPlaying;
     };
 
-    // Confetti flood on Yes (10 seconds)
     function floodConfetti() {
       const duration = 10 * 1000;
       const animationEnd = Date.now() + duration;
@@ -152,7 +174,6 @@
       }, 250);
     }
 
-    // Handle choice + email notification
     function handleChoice(choice) {
       yesBtn.disabled = true;
       noBtn.disabled = true;
